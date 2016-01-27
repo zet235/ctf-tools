@@ -1,0 +1,6 @@
+[submodule "peda"]
+	path = peda
+	url = https://github.com/longld/peda.git
+[submodule "qira"]
+	path = qira
+	url = https://github.com/BinaryAnalysisPlatform/qira.git
