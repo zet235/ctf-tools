@@ -5,6 +5,10 @@ echo "source ~/ctf-tools/pwn" >> ~/.zshrc
 echo "yoyo ~ DONE!"
 ```
 
+##update tools
+```
+git submodule foreach --recursive git pull origin master
+```
 
 
 
