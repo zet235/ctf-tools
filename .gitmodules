@@ -1,3 +1,6 @@
 [submodule "peda"]
 	path = peda
 	url = https://github.com/longld/peda.git
+[submodule "villoc"]
+	path = villoc
+	url = https://github.com/wapiflapi/villoc.git
