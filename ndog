@@ -13,10 +13,10 @@ parser.add_argument("-p", "--port", default='4000', help="port")
 args = parser.parse_args()
 
 if args.local:
-    subprocess.call("ncat -vc {} -kl localhost {}".format(args.local, args.port), shell=True)
+    subprocess.call("ncat -vc {} -kl ::1 {}".format(args.local, args.port), shell=True)
 elif args.strace:
-    subprocess.call("ncat -vc 'strace -ix {}' -kl localhost {}".format(args.strace, args.port), shell=True)
+    subprocess.call("ncat -vc 'strace -ix {}' -kl ::1 {}".format(args.strace, args.port), shell=True)
 elif args.ltrace:
-    subprocess.call("ncat -vc 'ltrace -i {}' -kl localhost {}".format(args.ltrace, args.port), shell=True)
+    subprocess.call("ncat -vc 'ltrace -i {}' -kl ::1 {}".format(args.ltrace, args.port), shell=True)
 else:
     print "Try '-h' or '--help' for more information."
