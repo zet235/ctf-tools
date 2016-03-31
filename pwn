@@ -11,3 +11,8 @@ function heap()
 {
     ltrace $1 |& python3 $CTFTOOLS/villoc/villoc.py - /usr/share/nginx/html/$1.html
 }
+
+function maps()
+{
+    cat /proc/$1/maps
+}
