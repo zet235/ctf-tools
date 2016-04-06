@@ -1,6 +1,6 @@
 export CTFTOOLS=$(cd "$(dirname $0)"; pwd)
-export PATH=$PATH:$CTFTOOLS
-export PYTHONPATH=$CTFTOOLS
+export PATH=$PATH:$CTFTOOLS/bin
+export PYTHONPATH=$CTFTOOLS/pylib
 
 #alias
 alias aslr.on="sudo sysctl -w kernel.randomize_va_space=2"

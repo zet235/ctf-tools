@@ -1,0 +1,18 @@
+#!/usr/bin/env python2
+import argparse
+import sys
+
+parser = argparse.ArgumentParser(description='''
+int to hex 
+''')
+parser.add_argument('data', nargs='*',
+    help='int to hex')
+
+
+args = parser.parse_args()
+if not args.data:
+    print  format( int( sys.stdin.read()),'x')
+else:
+    print format( int( ''.join(args.data)),'x')
+
+
