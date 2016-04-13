@@ -11,8 +11,8 @@ parser.add_argument('data', nargs='*',
 
 args = parser.parse_args()
 if not args.data:
-    print  format( int( sys.stdin.read()),'x')
+    print '0x' + format( int( sys.stdin.read()),'x')
 else:
-    print format( int( ''.join(args.data)),'x')
+    print '0x' + format( int( ''.join(args.data)),'x')
 
 
