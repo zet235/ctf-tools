@@ -2,12 +2,17 @@ import socket, telnetlib, atexit
 from color import bcolors
 
 class remote():
-    def __init__(self, host, port):
+    def __init__(self, host, port, timeout=2):
         self.host = host
         self.port = port
         self.buffer = ''
         self.sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         self.sock.connect((self.host,self.port))
+        if isinstance(timeout, int) and timeout > 0:
+            self.timeout = timeout
+        else:
+            self.timeout = 2
+        self.sock.settimeout(self.timeout)
         print bcolors.green + '[+] ' + bcolors.end + 'Opening connection to {} on port {}'.format(self.host,self.port)
 
         atexit.register(self.close)
@@ -26,9 +31,10 @@ class remote():
         return lines
 
     def recvuntil(self,until) :
-        data = ""
-        while not data.endswith(until):
-            data += self.sock.recv(1)
+        while not self.buffer.endswith(until):
+            self.buffer += self.sock.recv(1)
+        data = self.buffer
+        self.buffer = ''
         return data
 
     def sendline(self,data):
