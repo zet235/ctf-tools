@@ -4,3 +4,6 @@
 [submodule "villoc"]
 	path = villoc
 	url = https://github.com/wapiflapi/villoc.git
+[submodule "preeny"]
+	path = preeny
+	url = https://github.com/zardus/preeny

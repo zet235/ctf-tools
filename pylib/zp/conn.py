@@ -13,26 +13,26 @@ class remote():
         else:
             self.timeout = 2
         self.sock.settimeout(self.timeout)
-        print bcolors.green + '[+] ' + bcolors.end + 'Opening connection to {} on port {}'.format(self.host,self.port)
+        print(bcolors.green + '[+] ' + bcolors.end + 'Opening connection to {} on port {}'.format(self.host,self.port))
 
         atexit.register(self.close)
 
     def recvline(self):
         while not self.buffer.endswith('\n'):
-            self.buffer += self.sock.recv(1) 
+            self.buffer += self.sock.recv(1).decode() 
         data = self.buffer
         self.buffer = ''
         return data
 
     def recvlines(self,num):
         lines = []
-        for _ in xrange(num):
+        for _ in range(num):
             lines.append(self.recvline())
         return lines
 
     def recvuntil(self,until) :
         while not self.buffer.endswith(until):
-            self.buffer += self.sock.recv(1)
+            self.buffer += self.sock.recv(1).decode()
         data = self.buffer
         self.buffer = ''
         return data
@@ -48,5 +48,5 @@ class remote():
     def close(self): 
         if self.sock:
             self.sock.close()
-            print bcolors.red + '[+] ' + bcolors.end + 'Closed connection to {} port {}'.format(self.host,self.port)
+            print(bcolors.red + '[+] ' + bcolors.end + 'Closed connection to {} port {}'.format(self.host,self.port))
 
