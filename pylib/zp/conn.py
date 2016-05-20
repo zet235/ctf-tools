@@ -19,7 +19,7 @@ class remote():
 
     def recvline(self):
         while not self.buffer.endswith('\n'):
-            self.buffer += self.sock.recv(1).decode() 
+            self.buffer += self.sock.recv(1) 
         data = self.buffer
         self.buffer = ''
         return data
@@ -32,15 +32,19 @@ class remote():
 
     def recvuntil(self,until) :
         while not self.buffer.endswith(until):
-            self.buffer += self.sock.recv(1).decode()
+            self.buffer += self.sock.recv(1)
         data = self.buffer
         self.buffer = ''
         return data
 
+    def send(self,data):
+        self.sock.send(data)
+     
     def sendline(self,data):
         self.sock.send(data + '\n')
 
     def interactive(self):
+        print(bcolors.green + '[*] ' + bcolors.end + 'Switching to interactive mode')
         t = telnetlib.Telnet()
         t.sock = self.sock
         t.interact()
