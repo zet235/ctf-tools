@@ -1,4 +1,4 @@
-import socket, telnetlib, atexit
+import socket, telnetlib, atexit, sys
 from color import bcolors
 
 class remote():
@@ -7,13 +7,18 @@ class remote():
         self.port = port
         self.buffer = ''
         self.sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-        self.sock.connect((self.host,self.port))
-        if isinstance(timeout, int) and timeout > 0:
-            self.timeout = timeout
-        else:
-            self.timeout = 2
-        self.sock.settimeout(self.timeout)
-        print(bcolors.green + '[+] ' + bcolors.end + 'Opening connection to {} on port {}'.format(self.host,self.port))
+        try:
+            self.sock.connect((self.host,self.port))
+            if isinstance(timeout, int) and timeout > 0:
+                self.timeout = timeout
+            else:
+                self.timeout = 2
+            self.sock.settimeout(self.timeout)
+            print(bcolors.success('Opening connection to {} on port {}'.format(self.host,self.port)))
+        except:
+            print bcolors.error('can\'t connection to {} on port {}'.format(self.host,self.port))
+            sys.exit()
+
 
         atexit.register(self.close)
 
@@ -44,7 +49,7 @@ class remote():
         self.sock.send(data + '\n')
 
     def interactive(self):
-        print(bcolors.green + '[*] ' + bcolors.end + 'Switching to interactive mode')
+        print(bcolors.info('Switching to interactive mode'))
         t = telnetlib.Telnet()
         t.sock = self.sock
         t.interact()
@@ -52,5 +57,5 @@ class remote():
     def close(self): 
         if self.sock:
             self.sock.close()
-            print(bcolors.red + '[+] ' + bcolors.end + 'Closed connection to {} port {}'.format(self.host,self.port))
+            print(bcolors.warning('Closed connection to {} port {}'.format(self.host,self.port)))
 

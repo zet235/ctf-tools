@@ -1,39 +1,68 @@
 class bcolors:
-    black = '\033[30m'
-    red = '\033[31m'
-    green = '\033[32m'
-    yellow = '\033[33m'
-    blue = '\033[34m'
-    magenta = '\033[35m'
-    cyan = '\033[36m'
-    white = '\033[37m'
-    end = '\033[0m'
+    @staticmethod
+    def black(data):
+        return '\033[30m'+ data + '\033[0m'
+    @staticmethod
+    def red(data):
+        return '\033[31m'+ data + '\033[0m'
+    @staticmethod
+    def green(data):
+        return '\033[32m'+ data + '\033[0m'
+    @staticmethod
+    def yellow(data):
+        return '\033[33m'+ data + '\033[0m'
+    @staticmethod
+    def blue(data):
+        return '\033[34m'+ data + '\033[0m'
+    @staticmethod
+    def magenta(data):
+        return '\033[35m'+ data + '\033[0m'
+    @staticmethod
+    def cyan(data):
+        return '\033[36m'+ data + '\033[0m'
+    @staticmethod
+    def white(data):
+        return '\033[37m'+ data + '\033[0m'
 
     # Bold
-    bblack="\033[1;30m"
-    bred="\033[1;31m"
-    bgreen="\033[1;32m"
-    byellow="\033[1;33m"
-    bblue="\033[1;34m"
-    bmagenta="\033[1;35m"
-    bcyan="\033[1;36m"
-    bwhite="\033[1;37m"
 
-    def disable(self):
-        self.black = ''
-        self.red = ''
-        self.green = ''
-        self.yellow = ''
-        self.blue = ''
-        self.magenta = ''
-        self.cyan = ''
-        self.white = ''
-        self.bblack = ''
-        self.bred = ''
-        self.bgreen = ''
-        self.byellow = ''
-        self.bblue = ''
-        self.bmagenta = ''
-        self.bcyan = ''
-        self.bwhite = ''
-        self.end = ''
+    @staticmethod
+    def bblack(data):
+        return '\033[1;30m'+ data + '\033[0m'
+    @staticmethod
+    def bred(data):
+        return '\033[1;31m'+ data + '\033[0m'
+    @staticmethod
+    def bgreen(data):
+        return '\033[1;32m'+ data + '\033[0m'
+    @staticmethod
+    def byellow(data):
+        return '\033[1;33m'+ data + '\033[0m'
+    @staticmethod
+    def bblue(data):
+        return '\033[1;34m'+ data + '\033[0m'
+    @staticmethod
+    def bmagenta(data):
+        return '\033[1;35m'+ data + '\033[0m'
+    @staticmethod
+    def bcyan(data):
+        return '\033[1;36m'+ data + '\033[0m'
+    @staticmethod
+    def bwhite(data):
+        return '\033[1;37m'+ data + '\033[0m'
+
+
+    @classmethod
+    def info(cls,data):
+        return cls.bblue('[*] ') + data
+    @classmethod
+    def success(cls,data):
+        return cls.bgreen('[+] ') + data
+    @classmethod
+    def warning(cls,data):
+        return cls.byellow('[!] ') + data
+    @classmethod
+    def error(cls,data):
+        return cls.bred('[ERROR] ') + data
+
+
