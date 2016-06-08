@@ -1,6 +1,7 @@
 #!/usr/bin/env python2
 
 import argparse, subprocess
+from color import bcolors
 parser = argparse.ArgumentParser(description='''
 ncat with local strace ltrace
 ''')
@@ -8,6 +9,7 @@ ncat with local strace ltrace
 parser.add_argument("-l", "--local", help="with local")
 parser.add_argument("-s", "--strace", help="local + strace")
 parser.add_argument("-ll", "--ltrace", help="local + ltrace")
+parser.add_argument("-g", "--gdb", help="gdbserver")
 parser.add_argument("-p", "--port", default='4000', help="port")
 
 args = parser.parse_args()
@@ -18,5 +20,8 @@ elif args.strace:
     subprocess.call("ncat -vc 'strace -ix {}' -kl 127.0.0.1 {}".format(args.strace, args.port), shell=True)
 elif args.ltrace:
     subprocess.call("ncat -vc 'ltrace -i {}' -kl 127.0.0.1 {}".format(args.ltrace, args.port), shell=True)
+elif args.gdb:
+    print "type " + bcolors.green("target remote localhost:4444") + " in gdb"
+    subprocess.call("ncat -vc 'gdbserver localhost:4444 {}' -kl localhost {}".format(args.gdb, args.port), shell=True)
 else:
     print("Try '-h' or '--help' for more information.")
