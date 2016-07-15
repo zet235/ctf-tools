@@ -6,6 +6,8 @@ export PYTHONPATH=$CTFTOOLS/pylib
 alias aslr.on="sudo sysctl -w kernel.randomize_va_space=2"
 alias aslr.off="sudo sysctl -w kernel.randomize_va_space=0"
 alias gdb="gdb -q"
+alias gdb-peda="gdb -x $CTFTOOLS/peda/peda.py"
+alias gdb-heap="gdb -x $CTFTOOLS/pylib/libheap.py"
 alias objdump="objdump -M intel"
 function heap()
 {

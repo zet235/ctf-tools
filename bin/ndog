@@ -21,7 +21,7 @@ elif args.strace:
 elif args.ltrace:
     subprocess.call("ncat -vc 'ltrace -i {}' -kl 127.0.0.1 {}".format(args.ltrace, args.port), shell=True)
 elif args.gdb:
-    print "type " + bcolors.green("target remote localhost:4444") + " in gdb"
-    subprocess.call("ncat -vc 'gdbserver localhost:4444 {}' -kl localhost {}".format(args.gdb, args.port), shell=True)
+    print "type " + bcolors.green("target remote 127.0.0.1:4444") + " in gdb"
+    subprocess.call("ncat -vc 'gdbserver 127.0.0.1:4444 {}' -l 127.0.0.1 {}".format(args.gdb, args.port), shell=True)
 else:
     print("Try '-h' or '--help' for more information.")
