@@ -12,7 +12,8 @@ def p64(data,fmt="<Q"):
 def u64(data,fmt="<Q"):
     return struct.unpack(fmt,data)[0]
 
-def flat32(*args, **kwarg):
+
+def _flat(args):
     out = []
     for arg in args:
         if type(arg) == list:
@@ -20,14 +21,10 @@ def flat32(*args, **kwarg):
                 out.append(arg[i])
         else :
             out.append(arg)
-    return ''.join(map(p32,out))
+    return out
+
+def flat32(*args, **kwarg):
+    return ''.join(map(p32,_flat(args)))
 
 def flat64(*args, **kwarg):
-    out = []
-    for arg in args:
-        if type(arg) == list:
-            for i in range(len(arg)):
-                out.append(arg[i])
-        else :
-            out.append(arg)
-    return ''.join(map(p64,out))
+    return ''.join(map(p64,_flat(args)))
