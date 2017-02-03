@@ -1,0 +1,6 @@
+#!/bin/bash
+
+
+strings -tx $1 | grep /bin/sh
+
+
