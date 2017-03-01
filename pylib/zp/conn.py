@@ -24,7 +24,7 @@ class remote():
 
     def recvline(self):
         while not self.buffer.endswith('\n'):
-            self.buffer += self.sock.recv(1) 
+            self.buffer += self.sock.recv(1)
         data = self.buffer
         self.buffer = ''
         return data
@@ -44,7 +44,7 @@ class remote():
 
     def send(self,data):
         self.sock.send(data)
-     
+
     def sendline(self,data):
         self.sock.send(data + '\n')
 
@@ -54,7 +54,7 @@ class remote():
         t.sock = self.sock
         t.interact()
 
-    def close(self): 
+    def close(self):
         if self.sock:
             self.sock.close()
             print(bcolors.warning('Closed connection to {} port {}'.format(self.host,self.port)))
