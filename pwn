@@ -20,25 +20,6 @@ function aslr()
     fi
 }
 
-function ndog()
-{
-    if [ $1 = "-h" ]; then
-        echo " -l ltrace \n -s strace \n -g gdb"
-    elif [ $1 = "-l" ]; then
-        ncat -vc 'ltrace -ix $2' -kl 127.0.0.1 4000
-    elif [ $1 = "-s" ]; then
-        ncat -vc 'strace -ix $2' -kl 127.0.0.1 4000
-    elif [ $1 = "-g" ]; then
-        echo "type [ target remote 127.0.0.1:4444 ] ing db"
-        ncat -vc 'gdbserver 127.0.0.1:4444 $2' -l 127.0.0.1 4000
-    else
-        if [ -f "$1" ]; then
-            ncat -vc $1 -kl 127.0.0.1 4000
-        else
-            echo "[x] file not fuond"
-        fi
-    fi
-}
 
 function libc()
 {
