@@ -8,6 +8,8 @@ alias gdb-peda="gdb -x $CTFTOOLS/peda/peda.py"
 alias gdb-heap="gdb -x $CTFTOOLS/pylib/libheap.py"
 alias objdump="objdump -M intel"
 alias lddd="LD_TRACE_LOADED_OBJECTS=1"
+alias rop="ROPgadget --binary"
+
 
 function aslr()
 {
@@ -29,6 +31,11 @@ function libc()
     echo "libc_system = libc_base + 0x$libc_system"
     echo "libc_execve= libc_base + 0x$libc_execve"
     echo "libc_sh = libc_base + 0x$libc_sh"
+}
+
+syscall()
+{
+    grep --color -m 1 "$1" /usr/include/asm/unistd.h /usr/include/asm/unistd_32.h /usr/include/asm/unistd_64.h 2>/dev/null
 }
 
 function heap()
