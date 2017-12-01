@@ -7,3 +7,9 @@
 [submodule "preeny"]
 	path = preeny
 	url = https://github.com/zardus/preeny
+[submodule "binwalk"]
+	path = binwalk
+	url = https://github.com/devttys0/binwalk.git
+[submodule "sasquatch"]
+	path = sasquatch
+	url = https://github.com/devttys0/sasquatch
