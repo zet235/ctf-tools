@@ -1,0 +1,19 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import sys
+from pwn import *
+
+try :
+    elf_file = os.path.abspath(sys.argv[1])
+    e = ELF(elf_file,checksec=False)
+
+    print "\n" + "*"*15 + " PLT " +  "*"*15
+    for name,value in e.plt.items():
+        print  name + "@plt : " + str(hex(value))
+
+    print "\n" + "*"*15 + " GOT " +  "*"*15
+    for name,value in e.got.items():
+        print  name + "@got : " + str(hex(value))
+
+except:
+    print "plz give me a elf file :("
