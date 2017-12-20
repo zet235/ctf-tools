@@ -7,9 +7,13 @@ def u32(data,fmt="<I"):
     return struct.unpack(fmt,data)[0]
 
 def p64(data,fmt="<Q"):
+    if type(data) == str:
+        return data
     return struct.pack(fmt,data)
 
 def u64(data,fmt="<Q"):
+    if type(data) == str:
+        return data
     return struct.unpack(fmt,data)[0]
 
 
