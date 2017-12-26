@@ -42,10 +42,14 @@ class remote():
         self.buffer = ''
         return data
 
-    def send(self,data):
+    def send(self,data,after=None):
+        if isinstance(after, basestring):
+           self.recvuntil(after)
         self.sock.send(data)
 
-    def sendline(self,data):
+    def sendline(self,data,after=None):
+        if isinstance(after, basestring):
+            self.recvuntil(after)
         self.sock.send(data + '\n')
 
     def interactive(self):
