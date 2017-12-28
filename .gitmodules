@@ -10,3 +10,6 @@
 [submodule "sasquatch"]
 	path = sasquatch
 	url = https://github.com/devttys0/sasquatch
+[submodule "gdb/libheap"]
+	path = gdb/libheap
+	url = https://github.com/cloudburst/libheap.git
