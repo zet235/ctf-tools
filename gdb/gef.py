@@ -85,7 +85,7 @@ import types
 
 
 PYTHON_MAJOR = sys.version_info[0]
-GDB_MIN_VERSION = (7, 7)
+
 
 if PYTHON_MAJOR == 2:
     from HTMLParser import HTMLParser
@@ -213,6 +213,9 @@ ___default_aliases___                  = {
     "kp"  :   "info stack",
 }
 
+GDB_MIN_VERSION = (7, 7)
+GDB_VERSION_MAJOR, GDB_VERSION_MINOR = [int(_) for _ in gdb.VERSION.split(".")[:2]]
+GDB_VERSION = (GDB_VERSION_MAJOR, GDB_VERSION_MINOR)
 
 current_elf  = None
 current_arch = None
@@ -374,7 +377,7 @@ class Address:
     def dereference(self):
         addr = align_address(long(self.value))
         derefed = dereference(addr)
-        return long(derefed) if derefed else None
+        return None if derefed is None else long(derefed)
 
 
 class Permission:
@@ -1210,7 +1213,7 @@ def checksec(filename):
     - PIE
     - Fortify
     - Partial/Full RelRO.
-    Return a Python dict() with the different keys mentioned above, and the boolean
+    Return a dict() with the different keys mentioned above, and the boolean
     associated whether the protection was found."""
 
     try:
@@ -1994,6 +1997,19 @@ def experimental_feature(f):
     return wrapper
 
 
+def only_if_gdb_version_higher_than(required_gdb_version):
+    """Decorator to check whether current GDB version requirements."""
+    def wrapper(f):
+        def inner_f(*args, **kwargs):
+            if GDB_VERSION >= required_gdb_version:
+                f(*args, **kwargs)
+            else:
+                reason = "GDB >= {} for this command".format(required_gdb_version)
+                raise EnvironmentError(reason)
+        return inner_f
+    return wrapper
+
+
 def use_stdtype():
     if   is_elf32(): return "uint32_t"
     elif is_elf64(): return "uint64_t"
@@ -2057,10 +2073,9 @@ def get_filepath():
     else:
         if filename is not None:
             return filename
-        # inferior probably did not have name,
-        # extract cmdline from info proc
-        tmp = gdb.execute("info proc", to_string=True)
-        tmp = [x for x in tmp.split("\n") if x.startswith("cmdline")][0]
+        # inferior probably did not have name, extract cmdline from info proc
+        tmp = [x for x in gdb.execute("info proc", to_string=True).splitlines() \
+               if x.startswith("exe")][0]
         filename = tmp.split("'")[1]
         return filename
 
@@ -6690,10 +6705,6 @@ class MemoryCommand(GenericCommand):
         super(MemoryCommand, self).__init__(prefix=True)
         return
 
-    def post_load(self):
-        gdb.execute("memory reset")
-        return
-
     @only_if_gdb_running
     def do_invoke(self, argv):
         self.usage()
@@ -7057,7 +7068,7 @@ class DereferenceCommand(GenericCommand):
             # Is this value a pointer or a value?
             # -- If it's a pointer, dereference
             deref = addr.dereference()
-            if not deref:
+            if deref is None:
                 # if here, dereferencing addr has triggered a MemoryError, no need to go further
                 msg.append(format_address(addr.value))
                 break
@@ -7090,7 +7101,7 @@ class DereferenceCommand(GenericCommand):
                         break
 
             # if not able to parse cleanly, simply display and break
-            val = "{:#0{ma}x}".format(long(deref & 0xFFFFFFFFFFFFFFFF), ma=(get_memory_alignment() * 2 + 2))
+            val = "{:#0{ma}x}".format(long(deref & 0xFFFFFFFFFFFFFFFF), ma=(current_arch.ptrsize * 2 + 2))
             msg.append(val)
             break
 
@@ -7651,7 +7662,6 @@ class FormatStringSearchCommand(GenericCommand):
     _syntax_ = _cmdline_
     _aliases_ = ["fmtstr-helper",]
 
-
     def do_invoke(self, argv):
         dangerous_functions = {
             "printf": 0,
@@ -7766,29 +7776,6 @@ class HeapAnalysisCommand(GenericCommand):
         return
 
 
-@register_command
-class PrintCharCommand(GenericCommand):
-    """Simply evaluates the provided expression and prints the result as an ASCII char.
-    Only exists to fix `p/c` which is broken in GDB when output-radix is set to 16.
-    See https://sourceware.org/bugzilla/show_bug.cgi?id=8678."""
-    _cmdline_ = "printchar"
-    _syntax_ = "{:s} [EXPRESSION]".format(_cmdline_)
-    _aliases_ = ["pchar",]
-    _example_ = "{} 0x41".format(_cmdline_)
-
-    def do_invoke(self, argv):
-        argc = len(argv)
-
-        if argc == 0:
-            warn("Provide expression to evaluate")
-            return
-
-        expr = " ".join(argv)
-        value = long(gdb.parse_and_eval(expr)) & 0xFF
-        print("{:#x} {!r}".format(value, chr(value)))
-        return
-
-
 class GefCommand(gdb.Command):
     """GEF main command: view all new commands by typing `gef`"""
 
@@ -7874,8 +7861,7 @@ class GefCommand(gdb.Command):
 
 
     def load(self, initial=False):
-        """Load all the commands defined by GEF into GDB.
-        """
+        """Load all the commands defined by GEF into GDB."""
         nb_missing = 0
         self.commands = [(x._cmdline_, x) for x in __commands__]
 
@@ -8374,15 +8360,10 @@ def __gef_prompt__(current_prompt):
     return gef_prompt_off
 
 
-def is_recent_gdb():
-    ver = re.sub(r"^[^\d]*([\d]+)\.([\d]+).*$", r"\1.\2", gdb.VERSION)
-    current_gdb_version = tuple([int(_) for _ in ver.split('.')])
-    return current_gdb_version >= GDB_MIN_VERSION
-
 
 if __name__  == "__main__":
 
-    if not is_recent_gdb():
+    if GDB_VERSION < GDB_MIN_VERSION:
         err("You're using an old version of GDB. GEF cannot work correctly. Consider updating to GDB {}.{} or higher.".format(*GDB_MIN_VERSION))
 
     else:

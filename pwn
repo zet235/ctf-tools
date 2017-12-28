@@ -5,7 +5,7 @@ export PYTHONPATH=$CTFTOOLS/pylib
 #alias
 alias gdb="gdb -q"
 alias gdb-peda="gdb -x $CTFTOOLS/peda/peda.py"
-alias gdb-heap="gdb -x $CTFTOOLS/pylib/libheap.py"
+alias gef="gdb -x $CTFTOOLS/gdb/gef.py"
 alias objdump="objdump -M intel"
 alias lddd="LD_TRACE_LOADED_OBJECTS=1"
 alias rop="ROPgadget --binary"
