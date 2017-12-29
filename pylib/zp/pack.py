@@ -1,6 +1,8 @@
 import struct
 
 def p32(data,fmt="<I"):
+    if type(data) == str:
+        return data
     return struct.pack(fmt,data)
 
 def u32(data,fmt="<I"):
@@ -12,8 +14,6 @@ def p64(data,fmt="<Q"):
     return struct.pack(fmt,data)
 
 def u64(data,fmt="<Q"):
-    if type(data) == str:
-        return data
     return struct.unpack(fmt,data)[0]
 
 
