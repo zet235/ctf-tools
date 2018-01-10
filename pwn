@@ -58,6 +58,19 @@ rmalarm()
     fi
 }
 
+rmsleep()
+{
+    if [ -z $1 ]; then
+        echo "Usage: $FUNCNAME <File>"
+    elif [ ! -f $1 ]; then
+        echo "$1 not found!"
+    else
+        sed s/sleep/isnan/g "$1" > $1"_nosleep"
+        chmod +x $1"_nosleep"
+    fi
+}
+
+
 function maps()
 {
     cat /proc/$1/maps
