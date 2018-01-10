@@ -22,6 +22,10 @@ function aslr()
     fi
 }
 
+function gdbat()
+{
+    echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
+}
 
 function libc()
 {
@@ -41,6 +45,17 @@ syscall()
 function heap()
 {
     ltrace $1 |& python3 $CTFTOOLS/villoc/villoc.py - /usr/share/nginx/html/$1.html
+}
+
+rmalarm()
+{
+    if [ -z $1 ]; then
+        echo "Usage: $FUNCNAME <File>"
+    elif [ ! -f $1 ]; then
+        echo "$1 not found!"
+    else
+        sed -i s/alarm/isnan/g "$1"
+    fi
 }
 
 function maps()
